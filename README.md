@@ -89,7 +89,12 @@ MONGO_URI=mongodb://localhost:27017/salud_plus
 Step 5: Start the ServerStart the development server:Bashnpm run dev
 The console will output successful connection messages for both databases. You can now access the application at http://localhost:5000.5. ETL Data Migration ProcessThe core feature of this system is the CSV data migration module, which demonstrates a complete ETL pipeline:ShutterstockExplorarExtract: The user uploads a .csv file via the frontend. The multer library stores it temporarily, and the xlsx library parses the file into an array of JSON objects.Transform: The backend maps the flat CSV columns to the appropriate relational schemas and NoSQL embedded document structures.Load:MariaDB: Uses INSERT IGNORE to insert unique doctors, patients, and insurances idempotently. It retrieves the generated IDs and links them relationally in the appointments table.MongoDB: Uses findOneAndUpdate with upsert: true and the $addToSet operator. This groups multiple appointments under a single patient document based on their email, ensuring no duplicate entries exist in the clinical history array.6. API EndpointsMethodRouteDescriptionDatabase TargetedGET/api/doctorsRetrieves a list of doctors. Accepts an optional ?specialty= query parameter.MariaDBGET/api/patients/:email/historyRetrieves the denormalized, nested clinical history for a specific patient.MongoDBPOST/api/migrateAccepts a multipart form data CSV upload to execute the ETL pipeline.MariaDB & MongoDB7.
 
-Directory StructurePlaintextSaludPlus-Backend/
+Method,Route,Description,Database Targeted
+GET,/api/doctors,Retrieves a list of doctors. Accepts an optional ?specialty= query parameter.,MariaDB
+GET,/api/patients/:email/history,"Retrieves the denormalized, nested clinical history for a specific patient.",MongoDB
+POST,/api/migrate,Accepts a multipart form data CSV upload to execute the ETL pipeline.,MariaDB & MongoDB
+
+SaludPlus-Backend/
 ├── config/
 │   └── db.js                 # MariaDB connection pool setup
 ├── controllers/
