@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+
+# Environment variables (Crucial for security)
+.env
+
+# Temporary upload folder used by Multer
+uploads/
+*.csv
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS generated files
+.DS_Store
+Thumbs.db
